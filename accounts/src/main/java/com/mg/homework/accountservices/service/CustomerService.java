@@ -19,6 +19,7 @@ import com.mg.homework.accountservices.dto.AccountResponse;
 import com.mg.homework.accountservices.dto.CustomerResponse;
 import com.mg.homework.accountservices.errors.AccountAlreadyExistsException;
 import com.mg.homework.accountservices.errors.InvalidCustomerIdException;
+import com.mg.homework.accountservices.errors.TransactionServiceInegrationException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,8 @@ public class CustomerService {
 	
 	private final CustomerRepository customerRepository;
 	private final AccountRepository accountRepository;
+	private final TransactionService transactionService;
+	
 	
 	/**
 	 * Generates starting data for demo purposes
@@ -74,12 +77,16 @@ public class CustomerService {
 	 * @param credit - sum of initial money
 	 * @throws InvalidCustomerIdException
 	 * @throws AccountAlreadyExistsException
+	 * @throws TransactionServiceInegrationException 
 	 */
 	@Transactional
-	public void createAccount(String id, BigDecimal credit) throws InvalidCustomerIdException, AccountAlreadyExistsException {
+	public void createAccount(String id, BigDecimal credit) throws InvalidCustomerIdException, AccountAlreadyExistsException, TransactionServiceInegrationException {
 		Customer customer = findCustomer(id);
 		if(customer.getAccount() != null) {
 			throw new AccountAlreadyExistsException("Customer with id: " + id + " already has account");
+		}
+		if(!credit.equals(BigDecimal.ZERO)) {
+			transactionService.createTransaction(id, credit);
 		}
 		Account account = new Account(id, credit);
 		accountRepository.saveAndFlush(account);

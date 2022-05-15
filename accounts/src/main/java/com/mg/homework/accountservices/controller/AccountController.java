@@ -17,9 +17,11 @@ import com.mg.homework.accountservices.dto.AccountResponse;
 import com.mg.homework.accountservices.dto.CustomerResponse;
 import com.mg.homework.accountservices.errors.AccountAlreadyExistsException;
 import com.mg.homework.accountservices.errors.InvalidCustomerIdException;
+import com.mg.homework.accountservices.errors.TransactionServiceInegrationException;
 import com.mg.homework.accountservices.service.CustomerService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Main controller for account services
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
+@Slf4j
 public class AccountController {
 
 	private final CustomerService service;
@@ -40,9 +43,14 @@ public class AccountController {
 		try {
 			service.createAccount(request.getId(), request.getCredit());
 		} catch (InvalidCustomerIdException e) {
+			log.error(e.getMessage(), e);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		} catch (AccountAlreadyExistsException e) {
+			log.error(e.getMessage(), e);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		} catch (TransactionServiceInegrationException e) {
+			log.error(e.getMessage(), e);
+			throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, e.getMessage());
 		}
 	}
 
