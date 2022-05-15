@@ -17,6 +17,7 @@ import com.mg.homework.accountservices.dao.repository.AccountRepository;
 import com.mg.homework.accountservices.dao.repository.CustomerRepository;
 import com.mg.homework.accountservices.dto.AccountResponse;
 import com.mg.homework.accountservices.dto.CustomerResponse;
+import com.mg.homework.accountservices.dto.TransactionResponse;
 import com.mg.homework.accountservices.errors.AccountAlreadyExistsException;
 import com.mg.homework.accountservices.errors.InvalidCustomerIdException;
 import com.mg.homework.accountservices.errors.TransactionServiceInegrationException;
@@ -65,10 +66,12 @@ public class CustomerService {
 	 * @param id - customer/account identifier
 	 * @return account data
 	 * @throws InvalidCustomerIdException
+	 * @throws TransactionServiceInegrationException 
 	 */
-	public AccountResponse getAccountInfo(String id) throws InvalidCustomerIdException {
+	public AccountResponse getAccountInfo(String id) throws InvalidCustomerIdException, TransactionServiceInegrationException {
 		Customer customer = findCustomer(id);
-		return new AccountResponse(customer.getId(), customer.getName(), customer.getAccount() == null ? null : customer.getAccount().getCredit());
+		List<TransactionResponse> transactions = transactionService.getTransactionsForAccount(id);
+		return new AccountResponse(customer.getId(), customer.getName(), customer.getAccount() == null ? null : customer.getAccount().getCredit(), transactions);
 	}
 
 	/**
