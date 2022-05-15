@@ -29,6 +29,7 @@
 
 	<modules>
 		<module>accounts</module>
+		<module>transactions</module>
 	</modules>
 
 	<dependencyManagement>
