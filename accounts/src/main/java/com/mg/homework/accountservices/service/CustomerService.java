@@ -19,6 +19,7 @@ import com.mg.homework.accountservices.dto.AccountResponse;
 import com.mg.homework.accountservices.dto.CustomerResponse;
 import com.mg.homework.accountservices.dto.TransactionResponse;
 import com.mg.homework.accountservices.errors.AccountAlreadyExistsException;
+import com.mg.homework.accountservices.errors.AccountNotExistsException;
 import com.mg.homework.accountservices.errors.InvalidCustomerIdException;
 import com.mg.homework.accountservices.errors.TransactionServiceInegrationException;
 
@@ -95,6 +96,20 @@ public class CustomerService {
 		accountRepository.saveAndFlush(account);
 		customer.setAccount(account);
 		customerRepository.save(customer);
+	}
+
+	@Transactional
+	public void updateAccount(String id, BigDecimal credit) throws InvalidCustomerIdException, AccountNotExistsException, TransactionServiceInegrationException {
+		Customer customer = findCustomer(id);
+		Account account = customer.getAccount();
+		if(account == null) {
+			throw new AccountNotExistsException("Customer with id: " + id + " does not exist");
+		}
+		if(!credit.equals(BigDecimal.ZERO)) {
+			account.setCredit(account.getCredit().add(credit));
+			accountRepository.save(account);
+			 transactionService.createTransaction(id, credit);
+		}
 	}
 
 	private Customer findCustomer(String id) throws InvalidCustomerIdException {

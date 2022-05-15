@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,6 +17,7 @@ import com.mg.homework.accountservices.dto.AccountRequest;
 import com.mg.homework.accountservices.dto.AccountResponse;
 import com.mg.homework.accountservices.dto.CustomerResponse;
 import com.mg.homework.accountservices.errors.AccountAlreadyExistsException;
+import com.mg.homework.accountservices.errors.AccountNotExistsException;
 import com.mg.homework.accountservices.errors.InvalidCustomerIdException;
 import com.mg.homework.accountservices.errors.TransactionServiceInegrationException;
 import com.mg.homework.accountservices.service.CustomerService;
@@ -60,6 +62,26 @@ public class AccountController {
 		}
 	}
 
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public void updateAccount(@RequestBody AccountRequest request) {
+		try {
+			service.updateAccount(request.getId(), request.getCredit());
+		} catch (InvalidCustomerIdException | AccountNotExistsException e) {
+			log.error(e.getMessage(), e);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		} catch (TransactionServiceInegrationException e) {
+			log.error(e.getMessage(), e);
+			throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, e.getMessage());
+		} catch(Exception e) {
+			if(e.getCause() != null && e instanceof TransactionServiceInegrationException) {
+				log.error(e.getCause().getMessage(), e.getCause());
+				throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, e.getCause().getMessage());
+			}
+			throw e;
+		}
+	}
+	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<CustomerResponse> getAll() {
