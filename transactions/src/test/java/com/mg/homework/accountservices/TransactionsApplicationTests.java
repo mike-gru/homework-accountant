@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class AccountservicesApplicationTests {
 
+	// TODO Switch to JUNIT tests
+	
 	@Test
 	void contextLoads() {
 	}
