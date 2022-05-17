@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+			<title>Accountant Demo Application</title>
+			<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+			<link rel="stylesheet" th:href="@{/css/main.css}"/>
+		</head>
+		<body>
+			<h1>Account Info</h1>
+			<hr/>
+			<label>UUID:</label><field th:text="${account.id}"/><br/>
+			<label>Customer:</label><field th:text="${account.name}"/><br/>
+			<label>Credit:</label><field th:text="${account.credit}"/><br/>
+			<hr/>
+			<h1>Deposit</h1>
+    		<form action="#" th:action="@{/ui/deposit}" th:object="${transaction}" method="post">
+	    		<div class="form-group">
+	    			<p>Id: <input type="text" th:field="*{accountId}" /></p>
+	        		<p>Summ: <input type="text" th:field="*{money}" /></p>
+	        		<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+	        	</div>			
+			<hr/>
+			<table class="table">
+				<thead class="thead-light">
+					<tr>
+						<th>Id</th>
+						<th>UUID</th>
+						<th>Transfer</th>
+						<th>Time</th>
+					</tr>
+				</thead>
+				<tr th:each="transaction: ${account.transactions}">
+					<td th:text="${transaction.id}"/>
+					<td th:text="${transaction.accountId}"/>
+					<td th:text="${transaction.money}"/>
+					<td th:text="${transaction.timestamp}"/>
+				</tr>
+			</table>
+		</body>
+	</html>

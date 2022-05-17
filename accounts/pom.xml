@@ -12,6 +12,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
+		<bootstrap.version>4.2.1</bootstrap.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -26,7 +27,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
-
+		
+		<!-- Web UI -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
+		 <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${bootstrap.version}</version>
+        </dependency>
 		<!-- -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>

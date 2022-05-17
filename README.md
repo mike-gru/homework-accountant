@@ -98,6 +98,19 @@ Here are the examples of curl commands:
 `    "credit": 10.12`  
 `}'`  
 
+##### Web UI
 
+The raw draft UI is available by links:  
+1.http://localhost:8082/ui/customers   - the main page with customers list  
+2.http://localhost:8082/ui/accounts/{customer id} - the information on customers account is available from the main page
+
+
+No proper validation and error handling is currently implemented.
+
+-----------------------
+![Customers](assets/customers-list.png "Customers")
+
+-----------------------
+![Account info](assets/accounts.png "Account info")
 
 
