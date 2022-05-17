@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+			<title>Accountant Demo Application</title>
+			<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+			<link rel="stylesheet" th:href="@{/css/main.css}"/>
+		</head>
+		<body>
+			<h1>Accountant customers</h1>
+			<p>Here is a list of registered customers</p>
+			<hr/>
+			<table class="table">
+				<thead class="thead-light">
+					<tr>
+						<th>UUID</th>
+						<th>Full Name</th>
+					</tr>
+				</thead>
+				<tr th:each="customer: ${customers}">
+					<td><a th:href="@{'accounts/' + ${customer.id}}" th:text="${customer.id}"/></td>
+					<td th:text="${customer.name}"/>
+				</tr>
+			</table>
+		</body>
+	</html>
